@@ -1,0 +1,27 @@
+AddLocationForm:
+<AddLocationForm>:
+    orientation: "vertical"
+    search_input: search_box
+    list_items: search_results
+    BoxLayout:
+        size_hint_y: 0.07
+        TextInput:
+            id: search_box
+            size_hint_x: 0.46
+        Button:
+            size_hint_x: 0.27
+            text: "Search"
+            font_size: 19
+            on_press: root.search_location()
+        Button:
+            size_hint_x: 0.27
+            text: "Current Location"
+            font_size: 19
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            id: search_results
+            size_hint_y: None
+            height: "1010dp"
+            text: ""
+            font_size: 21

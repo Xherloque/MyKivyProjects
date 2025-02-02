@@ -1,0 +1,30 @@
+BoxLayout:
+    orientation: "vertical"
+    BoxLayout:
+        Label: 
+            text: "Hello Monsiuer"
+            background_color: "white"
+        Button:
+            text: "Click"
+            background_color: "purple"
+    BoxLayout:
+        Label:
+            text: "I'ma Label 2"
+        Button:
+            text: "I'm Button 2"
+    GridLayout:
+        rows: 2
+        cols: 3
+        Button:
+            text: "Number 1"
+        Button:
+            text: "Number 2"
+        Button:
+            text: "Number 3"
+        Button:
+            text: "Number 4"
+        Button:
+            text: "Number 5"
+        Button:
+            text: "Number 6"
+            background_color: "yellow"

@@ -7,6 +7,7 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.stacklayout import StackLayout
 from kivy.uix.textinput import TextInput
+from kivy.graphics import Rectangle, Color
 
 class GeneralSpace(BoxLayout):
     def __init__(self, **kwargs):
@@ -60,7 +61,9 @@ class DashBoard(BoxLayout):
         super().__init__(**kwargs)
         self.orientation="vertical"
         self.size_hint_x=0.23
-        self.add_widget(Label(text="DASHBOARD",font_size=20,bold=True))
+        dash_label = BackgroundLabel(text="DASHBOARD",font_size=20,bold=True)
+        dash_label.change_bg_color([0, 0, 0.5, 1])
+        self.add_widget(dash_label)
         search_funcs=BoxLayout()
         search_bar=TextInput(size_hint_x=0.8)
         submit_but=Button(text="search",size_hint_x=0.2)
@@ -115,28 +118,50 @@ class NavBar(BoxLayout):
         self.orientation = 'horizontal'
         self.size_hint_y = None
         self.height = 50
-
-        # Buttons for navigation
-        home_btn = Button(text='Home', on_press=self.switch_screen,background_color="navy")
-        about_btn = Button(text='About', on_press=self.switch_screen,background_color="navy")
-        contact_btn = Button(text='Contact', on_press=self.switch_screen,background_color="navy")
         
-        home_btn.screen_manager = screen_manager
-        home_btn.screen_name = 'home'
+        self.screen_manager = screen_manager
+        self.nav_buttons = []  # Store button references
         
-        about_btn.screen_manager = screen_manager
-        about_btn.screen_name = 'about'
+        # Create buttons
+        self.create_nav_button('Home', 'home')
+        self.create_nav_button('About', 'about')
+        self.create_nav_button('Contact', 'contact')
         
-        contact_btn.screen_manager = screen_manager
-        contact_btn.screen_name = 'contact'
-        
-        self.add_widget(home_btn)
-        self.add_widget(about_btn)
-        self.add_widget(contact_btn)
+        # Set initial active button
+        self.update_active_button(self.nav_buttons[0])
+    
+    def create_nav_button(self, text, screen_name):
+        btn = Button(text=text, on_press=self.switch_screen)
+        btn.screen_name = screen_name
+        self.nav_buttons.append(btn)
+        self.add_widget(btn)
     
     def switch_screen(self, instance):
-        instance.screen_manager.current = instance.screen_name
+        self.screen_manager.current = instance.screen_name
+        self.update_active_button(instance)
+    
+    def update_active_button(self, active_button):
+        for btn in self.nav_buttons:
+            btn.background_color = "lightgreen"  # Default (white)
+        active_button.background_color = [0, 0.6, 1, 1]  # Highlight (blue)
 
+class BackgroundLabel(Label):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        with self.canvas.before:
+            self.bg_color = Color(0.5, 1, 0, 0.8)  # Set background color (RGBA)
+            self.bg_rect = Rectangle(pos=self.pos, size=self.size)
+        
+        self.bind(pos=self.update_bg, size=self.update_bg)
+
+    def update_bg(self, *args):
+        self.bg_rect.pos = self.pos
+        self.bg_rect.size = self.size
+        
+    def change_bg_color(self, color):
+        """ Change background color dynamically """
+        self.bg_color.rgba = color  # Update color
+        
 class MainApp(App):
     def build(self):
         sm = ScreenManager()
@@ -145,7 +170,9 @@ class MainApp(App):
         sm.add_widget(ContactScreen(name='contact'))
         
         root = BoxLayout(orientation='vertical')
-        root.add_widget(Label(text="Community Support Management System",size_hint_y =0.1,font_size=35,color="blue"))
+        root.add_widget(BackgroundLabel(text="Community Support Management System",
+                                        size_hint_y =0.1,font_size=35,color="blue",
+                                        font_name="Courier"))
         root.add_widget(NavBar(screen_manager=sm))  # Navbar at the top
         root.add_widget(sm)  # Screen manager below navbar
         
