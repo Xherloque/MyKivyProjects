@@ -171,8 +171,7 @@ class MainApp(App):
         
         root = BoxLayout(orientation='vertical')
         root.add_widget(BackgroundLabel(text="Community Support Management System",
-                                        size_hint_y =0.1,font_size=35,color="blue",
-                                        font_name="Courier"))
+                                        size_hint_y =0.1,font_size=35,color="blue"))
         root.add_widget(NavBar(screen_manager=sm))  # Navbar at the top
         root.add_widget(sm)  # Screen manager below navbar
         
